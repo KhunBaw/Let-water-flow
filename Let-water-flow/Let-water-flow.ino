@@ -5,7 +5,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 volatile int flow_frequency;               // Water flow
 unsigned int l_hour, f_val;                // Water flow
 unsigned long ctTime, flow_val, cloopTime; // Water flow
-int ml = 0, inputml = 0 , CK = 1,relay = 4;
+int ml = 0, inputml = 0 , CK = 1, relay = 4;
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //three columns
 
@@ -35,9 +35,7 @@ void setup() {
   ctTime = millis();
   cloopTime = ctTime; // Water flow
 }
-
-void loop() {
-  char key = keypad.getKey();
+void intkey() {
   if (key != NO_KEY) {
     Serial.println(key);
     if (key == 'A') {
@@ -99,6 +97,10 @@ void loop() {
       ml = inputml;
     }
   }
+}
+void loop() {
+  char key = keypad.getKey();
+  intkey();
 
   ctTime = millis();
   if (ctTime >= (cloopTime + 1000))
@@ -107,7 +109,6 @@ void loop() {
     //l_hour = (flow_frequency * 60 / 7.5);
     //flow_frequency = 0;
     //Serial.print(l_hour, DEC);     Serial.print("  L/hour    "); Serial.println(key);
-
     lcd.clear();
     lcd.setCursor(1, 0);
     lcd.print(ml);
@@ -118,10 +119,12 @@ void loop() {
     lcd.setCursor(10, 1);
     lcd.print("ml");
   }
-  flow_val = f_val * 2.67;
+
+  flow_val = f_val * 2.67; // คำนวณรอบ ต่อ ปริมาณ
 
   //Serial.print(flow_val); Serial.println(" ml");
-  if (flow_val >= ml) {
+ 
+  if (flow_val >= ml) {           //หยุดจ่ายน้ำเมื่อครบ
     digitalWrite(relay, 1);
     flow_val = 0;
     f_val = 0;
