@@ -1,12 +1,11 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <Keypad.h>
-int relay = 4;
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 volatile int flow_frequency;               // Water flow
 unsigned int l_hour, f_val;                // Water flow
 unsigned long ctTime, flow_val, cloopTime; // Water flow
-int ml = 0, inputml = 0 , CK = 1;
+int ml = 0, inputml = 0 , CK = 1,relay = 4;
 const byte ROWS = 4; //four rows
 const byte COLS = 4; //three columns
 
@@ -18,7 +17,6 @@ char keys[ROWS][COLS] = {
 };
 byte rowPins[ROWS] = {12, 11, 10, 9};
 byte colPins[COLS] = {8, 7, 6, 5};
-
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
 void flow ()
